@@ -22,7 +22,7 @@ function startListen() {
                 }
                 if (name === item1.courseName) {
                     var newObj = {};
-                    newObj.channelNumber = item.channelNumbering
+                    newObj.channelNumber = item.channelNumbering;
                     newObj.bookname = item1.courseName; //课程名
                     newObj.lesson_id = item1.promoteId; //课程ID
                     newObj.images = item1.banner;       //封面图
