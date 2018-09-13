@@ -9,7 +9,7 @@ var fs = require('fs');
 
 //监听荔枝微课数据写入
 // acceptLizhilist();
-// acceptLizhiDetail();
+//acceptLizhiDetail();
 
 let win;
 
@@ -37,6 +37,9 @@ ipcMain.on('addLinkDone', (event, args) => {
     lizhiList[i]['teacher'] = args['teacherName'];
     lizhiList[i]['virtual_buynum'] = args['virtual_buynum'];
     lizhiList[i]['lesson_chapter_num'] = args['lesson_chapter_num'];
+    var bili = lizhiList[i]['teacher_income'];
+    lizhiList[i]['teacher_income'] = bili.substring(0, bili.length - 1);
+    lizhiList[i]['teacherid'] = args['teacherid'];
     jumpToNext();
 });
 

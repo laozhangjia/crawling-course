@@ -14,6 +14,7 @@ var subtitle = null;
 var virtual_buynum = 0;
 var lesson_chapter_num = 0;
 var sid = getQuery('sid');
+var teacherid = '';
 
 $.ajax({
     url: location.origin + '/api' + location.pathname + '/info' + location.search,
@@ -25,13 +26,15 @@ $.ajax({
         lesson_chapter_num = stats.lecture_count || 0;
         virtual_buynum = stats.popular;
         teacherName = res.data.liveroom.name;
+        teacherid = res.data.liveroom.id;
         subtitle = channel.subtitle;
 
         ipRender.send('addLinkDone', {
             teacherName: teacherName,
             subtitle: subtitle,
             virtual_buynum: virtual_buynum,
-            lesson_chapter_num: lesson_chapter_num
+            lesson_chapter_num: lesson_chapter_num,
+            teacherid: teacherid
         });
     },
     error: function (err) {
