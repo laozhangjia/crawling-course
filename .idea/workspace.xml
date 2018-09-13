@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="499dd479-3dcd-4a4a-947e-814362823ccd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/ProjectSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/electron-quick-start/v15/.suo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,63 +108,90 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-41901619">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.11" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="gitignore" value="1" />
+          <entry key="js" value="13" />
+          <entry key="py" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JavaScript" value="13" />
+          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="Python" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="gitignore" value="14" />
+          <entry key="js" value="1340" />
+          <entry key="txt" value="19" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JavaScript" value="1340" />
+          <entry key="PLAIN_TEXT" value="33" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.44104233">
-      <split-first>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/lizhi.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="391">
-                  <caret line="18" column="115" selection-start-line="18" selection-start-column="115" selection-end-line="18" selection-end-column="115" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/acceptLizhiDetail.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="388">
-                  <caret line="26" column="36" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="36" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/acceptLizhiDetail.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
-                  <caret line="22" column="48" lean-forward="true" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/assets/lizhi/getMyReprint.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="13" column="28" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="28" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/lizhidetail.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="459">
-                  <caret line="26" column="50" selection-start-line="26" selection-start-column="50" selection-end-line="26" selection-end-column="50" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/acceptLizhiDetail.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lizhi.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="7" lean-forward="true" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/lizhi/getMyReprint.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="42" lean-forward="true" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/lizhi/getLizhiTeacher.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="557" lean-forward="true" selection-start-line="557" selection-end-line="557" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -174,13 +203,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>1元秒杀</find>
-      <find>红宝宝</find>
-      <find>全网</find>
-      <find>14天</find>
-      <find>生活品味</find>
-      <find>save</find>
-      <find>60秒</find>
       <find>生活学院</find>
       <find>穿搭</find>
       <find>大师课</find>
@@ -204,6 +226,13 @@
       <find>产后瘦身</find>
       <find>length</find>
       <find>700513</find>
+      <find>channelNumber</find>
+      <find>13天</find>
+      <find>4堂做父母必须学的心理课</find>
+      <find>拆解学习力，让知识积累增速10倍</find>
+      <find>整容</find>
+      <find>win2</find>
+      <find>lizhiDetailDone</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -249,11 +278,14 @@
         <option value="$PROJECT_DIR$/lizhi.json" />
         <option value="$PROJECT_DIR$/assets/lizhi/addChannelLink.js" />
         <option value="$PROJECT_DIR$/assets/lizhi/getList.js" />
-        <option value="$PROJECT_DIR$/lizhi.js" />
         <option value="$PROJECT_DIR$/acceptLizhiList.js" />
         <option value="$PROJECT_DIR$/assets/lizhi/getMyReprint.js" />
+        <option value="$PROJECT_DIR$/acceptLizhiTeacher.js" />
         <option value="$PROJECT_DIR$/acceptLizhiDetail.js" />
+        <option value="$PROJECT_DIR$/assets/lizhi/getLizhiTeacher.js" />
         <option value="$PROJECT_DIR$/lizhidetail.json" />
+        <option value="$PROJECT_DIR$/lizhi.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -271,7 +303,7 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
     <option name="y" value="-10" />
     <option name="width" value="1935" />
@@ -289,8 +321,8 @@
         <subPane>
           <expand>
             <path>
-              <item name="electron-quick-start" type="b2602c69:ProjectViewProjectNode" />
-              <item name="electron-quick-start" type="462c0819:PsiDirectoryNode" />
+              <item name="crawling-course" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crawling-course" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -309,14 +341,14 @@
     <property name="ts.external.directory.path" value="D:\Software\PyCharm\PyCharm 2018.1.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\electron-quick-start\亲子学院" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\项目\electron-quick-start\assets\lizhi" />
       <recent name="E:\electron-quick-start\assets" />
       <recent name="E:\electron-quick-start\excel" />
       <recent name="E:\electron-quick-start\数据" />
+      <recent name="E:\electron-quick-start\亲子学院" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\electron-quick-start\亲子学院" />
     </key>
   </component>
@@ -372,12 +404,20 @@
       <option name="presentableId" value="Default" />
       <updated>1536306640840</updated>
     </task>
+    <task id="LOCAL-00001" summary="获取我已转载添加渠道链接列表">
+      <created>1536822064584</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1536822064584</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18176973" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15938166" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -392,7 +432,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="TypeScript" order="10" weight="0.32892805" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.55964327" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" visible="true" weight="0.55964327" />
       <window_info anchor="bottom" id="Python Console" order="13" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -407,6 +447,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="获取我已转载添加渠道链接列表" />
+    <option name="LAST_COMMIT_MESSAGE" value="获取我已转载添加渠道链接列表" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -418,28 +462,12 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/assets/lizhi/getList.js</url>
           <line>11</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/亲子学院/亲子学院-学科精选.json" />
-    <entry file="file://$PROJECT_DIR$/数据/亲子学院/小初高.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret column="1324" lean-forward="true" selection-start-column="1324" selection-end-column="1324" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/input.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="2" lean-forward="true" selection-start-column="2" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/亲子学院/123.json" />
     <entry file="file://$PROJECT_DIR$/数据/亲子学院/育儿.json">
       <provider selected="true" editor-type-id="text-editor">
@@ -659,17 +687,6 @@
     <entry file="file://$PROJECT_DIR$/数据/亲子学院/儿童护理.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/excel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <marker date="1536632591558" expanded="true" signature="168:169" ph="..." />
-            <marker date="1536632591558" expanded="true" signature="168:173" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -684,55 +701,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lizhi.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="42" column="41" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/lizhi/addChannelLink.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="49" lean-forward="true" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/lizhi/getList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/acceptLizhiList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="59" lean-forward="true" selection-start-line="8" selection-start-column="59" selection-end-line="8" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="541">
-          <caret line="214" column="44" lean-forward="true" selection-start-line="195" selection-start-column="23" selection-end-line="214" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/lizhi/getMyReprint.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="28" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/acceptLizhiDetail.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="48" lean-forward="true" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lizhi.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -740,10 +708,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/assets/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="204" column="56" lean-forward="true" selection-start-line="204" selection-start-column="56" selection-end-line="204" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/lizhi/getList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="36" lean-forward="true" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acceptLizhiTeacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/lizhi/addChannelLink.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acceptLizhiList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="50" lean-forward="true" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/excel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="45" lean-forward="true" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
+          <folding>
+            <marker date="1536632591558" expanded="true" signature="168:169" ph="..." />
+            <marker date="1536632591558" expanded="true" signature="168:173" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lizhidetail.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="26" column="50" selection-start-line="26" selection-start-column="50" selection-end-line="26" selection-end-column="50" />
+        <state relative-caret-position="201">
+          <caret line="3805" column="50" lean-forward="true" selection-start-line="3805" selection-start-column="50" selection-end-line="3805" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/acceptLizhiDetail.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lizhi.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="7" lean-forward="true" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/lizhi/getMyReprint.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="42" lean-forward="true" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/lizhi/getLizhiTeacher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="557" lean-forward="true" selection-start-line="557" selection-end-line="557" />
         </state>
       </provider>
     </entry>
