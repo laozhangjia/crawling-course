@@ -25,6 +25,7 @@ for (var i = 0; i < trs.length; i++) {
     courseObj.promoteId = trs.eq(i).attr('data-promote-id');
     courseObj.courseName = tds.eq(0).find('a').text().replace(/\s+/g, "");
     courseObj.courseLink = tds.eq(0).find('a').attr('href').replace(/\s+/g, "");
+    courseObj.smaeId = tds.eq(0).find('a').attr('href').split('/').pop().split('?')[0];
     courseObj.banner = tds.eq(1).find('img').attr('src').replace(/\s+/g, "");
     courseObj.prop = tds.eq(2).text().replace(/\s+/g, "");
     courseObj.category = tds.eq(3).text().replace(/\s+/g, "");

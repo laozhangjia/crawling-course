@@ -7,7 +7,7 @@ var newArr = [];
 function startListen() {
     ipcMain.on('lizhiDetailDone', (event, args) => {
         console.log('data done');
-
+        var number = 1;
         dataJson = dataJson.concat(args);
         var courseList = fs.readFileSync('./lizhi.json', {encoding: 'utf-8'});
 
@@ -20,7 +20,9 @@ function startListen() {
                 } else {
                     name = item.bookname;
                 }
-                if (name === item1.courseName) {
+                if (item1.sameId === item.sameId) {
+                    console.log('current index:', number);
+                    number++;
                     var newObj = {};
                     newObj.channelNumber = item.channelNumbering;
                     newObj.bookname = item1.courseName; //课程名

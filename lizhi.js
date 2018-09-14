@@ -9,7 +9,7 @@ var fs = require('fs');
 
 //监听荔枝微课数据写入
 // acceptLizhilist();
-//acceptLizhiDetail();
+acceptLizhiDetail();
 
 let win;
 
@@ -25,6 +25,7 @@ function jumpToNext() {
         win.loadURL(lizhiList[i]['lesson_url']);
     } else {
         console.log('DATA INDEX', i);
+        console.log('lizhidetail.json length:', lizhiList.length);
         fs.writeFile('./lizhidetail.json', JSON.stringify({data: lizhiList}), (err) => {
             throw err;
         })
@@ -61,8 +62,8 @@ function createWindow() {
     var count = 1;
     var content = win.webContents;
     content.on('did-finish-load', function () {
-        count++;
         console.log('page count:', count);
+        count++;
         fs.readFile('./assets/jquery-1.8.1.min.js', {encoding: 'utf-8'}, function (err, jquery) {
             content.executeJavaScript(jquery, (results) => {
                 fs.readFile('./assets/lizhi/getLizhiTeacher.js', {encoding: 'utf-8'}, function (err, detailjs) {

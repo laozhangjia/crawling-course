@@ -5,7 +5,14 @@ if (location.pathname === '/cps/sourcelist') {
     var remote = require('electron').remote;
     var currentWindow = remote.getCurrentWindow();
 
-    var trs = $('.table-hover tbody tr')
+    var trs = $('.table-hover tbody tr');
+
+    function getQuery(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 
     var arr = [];
     for (var i = 0; i < trs.length; i++) {
@@ -18,6 +25,7 @@ if (location.pathname === '/cps/sourcelist') {
         obj.createTime = tds.eq(3).text();
         obj.status = tds.eq(4).text().replace(/\s+/g, "") === '有效' ? 1 : 0;
         obj.lesson_url = tds.eq(5).find('a').data('link');
+        obj.sameId = tds.eq(5).find('a').data('link').split('/').pop().split('?')[0];
         obj.virtual_buynum = tds.eq(6).text();
         tds.eq(7).children('span').find('span').remove();
         obj.currentIncome = tds.eq(7).children('span').text();
