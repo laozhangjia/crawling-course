@@ -2,26 +2,39 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>数据抓取</title>
+    <style>
+        .item {
+            width: 80px;
+            line-height: 30px;
+            background: orange;
+            color: #FFFFFF;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            }
+
+    </style>
 </head>
 <body>
-<h1>Hello World!</h1>
-<!-- All of the Node.js APIs are available in this renderer process. -->
-We are using Node.js
-<script>document.write(process.versions.node)</script>
-,
-Chromium
-<script>document.write(process.versions.chrome)</script>
-,
-and Electron
-<script>document.write(process.versions.electron)</script>
-.
 
+<div id="category">
+    <div class="item" data-category="qianliao">抓取千聊</div>
+    <div class="item" style="margin-top: 10px" data-category="lizhi">抓取荔枝</div>
+</div>
 <script>
-    alert(123);
-    // You can also require other files to run in this process
-    var xx = require('./renderer.js')
-    xx();
+    var ipcRender = require('electron').ipcRenderer;
+    var remote = require('electron').remote;
+    var currentWindow = remote.getCurrentWindow();
+    var category = '';
+    document.getElementById('category').addEventListener('click', function (event) {
+        var target = event.srcElement || event.target;
+        if (event.target.className === 'item') {
+            category = target.getAttribute('data-category');
+            ipcRender.send('get-url', category)
+        }
+    });
+
 </script>
 </body>
 </html>

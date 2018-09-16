@@ -1,8 +1,8 @@
 {
-  "name": "electron-quick-start",
+  "name": "crawlin",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "lizhi.js",
+  "main": "app.js",
   "scripts": {
     "start": "electron ."
   },

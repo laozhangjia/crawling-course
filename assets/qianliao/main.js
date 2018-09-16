@@ -71,7 +71,7 @@ function startPostData() {
         postUrl = childrenItem.url;
         pageNum = 1;
         tagId = childrenItem.tagId;
-        postPath = './assets/qianliao/results/' + '/' + childrenItem.name + '.json';
+        postPath = './assets/qianliao/results/' + childrenItem.name + '.json';
         postData();
     });
 
@@ -218,8 +218,5 @@ function getMyReprint() {
         }
     })
 }
-
-
-
 
 
