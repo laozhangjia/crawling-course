@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>数据抓取</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+            }
+
         .item {
             width: 80px;
             line-height: 30px;
@@ -14,27 +19,325 @@
             cursor: pointer;
             }
 
+        .step > div {
+            cursor: pointer;
+            line-height: 40px;
+            }
+
+        webview {
+            height: 300px;
+            }
+
+        #category {
+            text-align: center;
+            }
+
+        #category .fl:first-child {
+            border-bottom: 1px #CCCCCC solid;
+            border-top: 1px solid #CCCCCC;
+            min-height: 60px;
+            }
+
+        .step button {
+            cursor: pointer;
+            }
     </style>
 </head>
 <body>
+<webview src="https://m.weike.fm/cps/hotlist" nodeintegration plugins
+         preload="renderer.js"></webview>
 
 <div id="category">
-    <div class="item" data-category="qianliao">抓取千聊</div>
-    <div class="item" style="margin-top: 10px" data-category="lizhi">抓取荔枝</div>
+    <div class="fl">
+        <div class="" data-category="qianliao">千聊</div>
+        <p id="qianliao-tip" style="color: red"></p>
+        <button style="cursor: pointer" id="get-qianliao">获取千聊数据</button>
+    </div>
+    <div class="fl">
+        <div class="" style="margin-top: 10px" data-category="lizhi">荔枝</div>
+        <p id="lizhi-tip" style="color: red"></p>
+        <input type="text" placeholder="输入渠道备注" style="margin: 0 auto;margin-bottom: 10px;" id="remarks">
+        <div class="step">
+            <button class="step-item" data-step="1">获取课程列表</button>
+            <button class="step-item" data-step="2">检查/添加渠道</button>
+            <button class="step-item" data-step="3">获取渠道列表</button>
+            <button class="step-item" data-step="4">获取教师信息</button>
+        </div>
+    </div>
+    <div style="margin-top: 50px;">
+        <button onclick="reload()" style="cursor: pointer">重置</button>
+    </div>
+
 </div>
 <script>
-    var ipcRender = require('electron').ipcRenderer;
-    var remote = require('electron').remote;
+    const Excel = nodeRequire('exceljs');
+    const path = nodeRequire('path');
+    var ipcRender = nodeRequire('electron').ipcRenderer;
+    var remote = nodeRequire('electron').remote;
+    var store = remote.getGlobal('store');
     var currentWindow = remote.getCurrentWindow();
+    const fs = nodeRequire('fs');
     var category = '';
-    document.getElementById('category').addEventListener('click', function (event) {
-        var target = event.srcElement || event.target;
-        if (event.target.className === 'item') {
-            category = target.getAttribute('data-category');
-            ipcRender.send('get-url', category)
-        }
-    });
+    var webview;
+    var lizhiList = [];
+    var myChannel = [];
+    var newArr = [];
+    var remarks = '';
+    var workbook;
+    var worksheet;
 
+    function reload() {
+        currentWindow.reload();
+    }
+
+    window.onload = function () {
+        webview = document.querySelector('webview');
+        let lizhiTip = document.getElementById('lizhi-tip');
+        let qianliaoTip = document.getElementById('qianliao-tip');
+
+
+        //获取列表
+        var getList = {
+            getListItem: function (arr, page) {
+                lizhiTip.innerText = '第' + page + '页获取完成';
+                lizhiList = lizhiList.concat(arr);
+            },
+            getListComplete: function (arr) {
+                lizhiList = lizhiList.concat(arr);
+                fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: lizhiList}), (err) => {
+                    if (err) throw err;
+                    lizhiTip.innerText = '课程列表已获取完成共' + lizhiList.length + '课';
+                })
+            }
+        };
+
+        //添加渠道链接
+        var addChannelLink = {
+            index: 0,
+            addChannelLink: function (args) {
+                console.log(args);
+                this.index++;
+                if (this.index < lizhiList.length) {
+                    webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[this.index]['promoteId']);
+                    lizhiTip.innerText = '正在添加' + lizhiList[this.index]['courseName'] + '渠道链接' + '(' + this.index + '/' + lizhiList.length + ')';
+                } else {
+                    lizhiTip.innerText = '渠道链接已添加完成';
+                    document.getElementById('remarks').value = '';
+                }
+            }
+        };
+
+        //获取渠道列表
+        var getMyChannel = {
+            getChannelItem: function (arr, page) {
+                lizhiTip.innerText = '第' + page + '页已获取';
+                myChannel = myChannel.concat(arr);
+            },
+            getMyChannelComplete: function (arr) {
+                myChannel = myChannel.concat(arr);
+                console.log('myChannel length', myChannel.length);
+                fs.writeFileSync('./assets/lizhi/results/my-distribution.json', JSON.stringify({data: myChannel}));
+                var number = 1;
+                myChannel.forEach((item) => {
+                    lizhiList.forEach((item1) => {
+                        if (item1.sameId == item.sameId) {
+                            console.log('current index:', number);
+                            number++;
+                            var newObj = {};
+                            newObj.channelNumber = item.channelNumbering;
+                            newObj.bookname = item1.courseName; //课程名
+                            newObj.lesson_id = item1.promoteId; //课程ID
+                            newObj.images = item1.banner;       //封面图
+                            newObj.origin_price = 0;            //原价
+                            newObj.price = item1.price;         //定价
+                            newObj.lesson_subtitle = '';        //课程副标题
+                            newObj.lesson_chapter_num = 0;   //课程数
+                            newObj.virtual_buynum = item.virtual_buynum;  //以售卖数量
+                            newObj.teacher_income = item1.proportion; //分成比例
+                            newObj.teacherid = item1.liveId;        //课程来源id
+                            newObj.teacher = item1.liveName;          //作者名
+                            newObj.isdiscount = 0;
+                            newObj.status = item.status;            //是否有效
+                            newObj.support_coupon = 0;              //是否支持优惠券
+                            newObj.is_open_recommend = 0;           //是否开启推荐
+                            newObj.tagId = '';
+                            newObj.category_name = item1.category;
+                            newObj.lesson_url = item.lesson_url;      //课程链接
+                            newObj.lesson_source = '微课';
+                            newObj.tweetArticle = item1.tweetArticle;
+                            newArr.push(newObj);
+                        }
+                    })
+                });
+                lizhiTip.innerText = '我的渠道列表获取完成共' + newArr.length + '条';
+                fs.writeFileSync('./assets/lizhi/results/concat.json', JSON.stringify({data: newArr}));
+            }
+        };
+
+        var getTeacherInfo = {
+            teacherIndex: 0,
+            getTeacherInfo: function (args) {
+                var teacherIndex = this.teacherIndex;
+                newArr[teacherIndex]['lesson_subtitle'] = args['subtitle'];
+                newArr[teacherIndex]['teacher'] = args['teacherName'];
+                newArr[teacherIndex]['virtual_buynum'] = args['virtual_buynum'];
+                newArr[teacherIndex]['lesson_chapter_num'] = args['lesson_chapter_num'];
+                var bili = newArr[teacherIndex]['teacher_income'];
+                newArr[teacherIndex]['teacher_income'] = bili.substring(0, bili.length - 1);
+                newArr[teacherIndex]['teacherid'] = args['teacherid'];
+                worksheet.addRow(newArr[teacherIndex]).commit();
+                this.teacherIndex++;
+                teacherIndex = this.teacherIndex;
+                if (teacherIndex < newArr.length) {
+                    webview.loadURL(newArr[teacherIndex].lesson_url);
+                    lizhiTip.innerText = newArr[teacherIndex]['bookname'] + '(' + teacherIndex + '/' + newArr.length + ')';
+                } else {
+                    workbook.commit();
+                    var excelPath = path.join(process.cwd(), 'assets/lizhi/results/lizhi.xlsx');
+                    fs.writeFile('./assets/lizhi/results/Final.json', JSON.stringify({data: newArr}), (err) => {
+                        if (err) throw err;
+                        lizhiTip.innerText = '教师信息获取完成,生成excel路径为:' + excelPath;
+                    });
+                }
+            }
+        };
+
+
+        webview.addEventListener('ipc-message', (event) => {
+            var args = event.args;
+            if (event.channel === "getListItem") {
+                getList.getListItem(event.args[0], event.args[1]);
+            }
+            if (event.channel === 'getListComplete') {
+                getList.getListComplete(event.args[0]);
+            }
+
+            if (event.channel == 'addLinkDone') {
+                addChannelLink.addChannelLink(args[0]);
+            }
+
+            if (event.channel == 'getMyDistributionItem') {
+                getMyChannel.getChannelItem(event.args[0], args[1]);
+            }
+
+            if (event.channel == 'getMyDistributionComplete') {
+                getMyChannel.getMyChannelComplete(event.args[0]);
+            }
+
+            if (event.channel == 'getTeacherInfo') {
+                getTeacherInfo.getTeacherInfo(args[0]);
+            }
+            if (event.channel == 'getQianliaoLsit') {
+                qianliaoTip.innerText = args[0];
+            }
+        });
+
+        webview.addEventListener('did-finish-load', function () {
+            webview.openDevTools();
+            var Jquery = fs.readFileSync('./assets/jquery-1.8.1.min.js', {encoding: 'utf-8'});
+            webview.executeJavaScript(Jquery, (results) => {
+                if (category === 'lizhi') {
+                    let mainJs = fs.readFileSync('./assets/lizhi/main.js', {encoding: 'utf-8'});
+                    webview.executeJavaScript(mainJs, (results) => {
+                        webview.send('get-remarks', '123');
+                        console.log('执行荔枝main成功')
+                    })
+                } else if (category == 'qianliao') {
+                    let mainJs = fs.readFileSync('./assets/qianliao/main.js', {encoding: 'utf-8'});
+                    webview.executeJavaScript(mainJs, (results) => {
+                        console.log('执行千聊main成功')
+                    })
+                }
+            })
+        });
+
+
+        document.getElementById('get-qianliao').addEventListener('click', function (event) {
+            category = 'qianliao';
+            webview.loadURL('https://m.qlchat.com/pc/knowledge-mall/index')
+        });
+
+        document.getElementsByClassName('step')[0].addEventListener('click', function (event) {
+            let target = event.srcElement || event.target;
+            let step;
+            category = 'lizhi';
+            if (target.hasAttribute('data-step')) {
+                step = target.getAttribute('data-step');
+
+                if (step == 1) {
+                    lizhiList = [];
+                    webview.loadURL('https://m.weike.fm/cps/objlist')
+                }
+                if (step == 2) {
+                    remarks = document.getElementById('remarks').value;
+                    if (!remarks) {
+                        alert('请输入渠道备注');
+                        return;
+                    } else {
+                        store.remarks = remarks;
+                    }
+                    if (lizhiList.length) {
+                        webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[0]['promoteId'])
+                    } else if (fs.existsSync('./assets/lizhi/results/list.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data.length) {
+                        lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json')).data;
+                        webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[0]['promoteId'])
+                    } else {
+                        alert('未检测到有课程列表请先获取课程列表再执行此操作');
+                    }
+                }
+
+
+                if (step == 3) {
+                    if (lizhiList.length) {
+                        myChannel = [];
+                        webview.loadURL('https://m.weike.fm/cps/sourcelist')
+                    } else if (fs.existsSync('./assets/lizhi/results/list.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data.length) {
+                        myChannel = [];
+                        lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json')).data;
+                        webview.loadURL('https://m.weike.fm/cps/sourcelist')
+                    } else {
+                        alert('请先获取课程列表再获取执行此操作');
+                    }
+                }
+
+                if (step == 4) {
+                    if (newArr.length) {
+                        lizhiExcelInit();
+                        webview.loadURL(newArr[0].lesson_url);
+                    } else if (
+                        fs.existsSync('./assets/lizhi/results/concat.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/concat.json', {encoding: 'utf-8'})).data.length
+                    ) {
+                        lizhiExcelInit();
+                        newArr = JSON.parse(fs.readFileSync('./assets/lizhi/results/concat.json', {encoding: 'utf-8'})).data;
+                        webview.loadURL(newArr[0].lesson_url);
+                    } else {
+                        alert('请先获取我的渠道列表再执行此操作');
+                    }
+                }
+            }
+        });
+
+        function lizhiExcelInit() {
+            workbook = new Excel.stream.xlsx.WorkbookWriter({
+                filename: './assets/lizhi/results/lizhi.xlsx'
+            });
+            worksheet = workbook.addWorksheet('Sheet');
+            worksheet.columns = [
+                {header: '渠道编号', key: 'channelNumber'},
+                {header: '课程名', key: 'bookname'},
+                {header: '分类', key: 'category_name'},
+                {header: '封面图', key: 'images'},
+                {header: '价格', key: 'price'},
+                {header: '分成比例', key: 'teacher_income'},
+                {header: '推广标题', key: 'lesson_subtitle'},
+                {header: '课程数', key: 'lesson_chapter_num'},
+                {header: '购买人数', key: 'virtual_buynum'},
+                {header: '教师', key: 'teacher'},
+                {header: '文案链接', key: 'tweetArticle'},
+                {header: '课程链接', key: 'lesson_url'},
+            ];
+        }
+    }
 </script>
 </body>
 </html>

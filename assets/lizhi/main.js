@@ -1,7 +1,13 @@
-const remote = require('electron').remote;
-const fs = require('fs');
-const ipRender = require('electron').ipcRenderer;
+const remote = nodeRequire('electron').remote;
+const fs = nodeRequire('fs');
+const store = remote.getGlobal('store');
+const ipRender = nodeRequire('electron').ipcRenderer;
 const currentWindow = remote.getCurrentWindow();
+let remarks;
+
+ipRender.on('get-remarks', (event, args) => {
+    remarks = args;
+});
 
 function getQuery(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -20,7 +26,7 @@ function getList() {
         courseObj.promoteId = trs.eq(i).attr('data-promote-id');
         courseObj.courseName = tds.eq(0).find('a').text().replace(/\s+/g, "");
         courseObj.courseLink = tds.eq(0).find('a').attr('href').replace(/\s+/g, "");
-        courseObj.smaeId = tds.eq(0).find('a').attr('href').split('/').pop().split('?')[0];
+        courseObj.sameId = tds.eq(0).find('a').attr('href').split('/').pop().split('?')[0];
         courseObj.banner = tds.eq(1).find('img').attr('src').replace(/\s+/g, "");
         courseObj.prop = tds.eq(2).text().replace(/\s+/g, "");
         courseObj.category = tds.eq(3).text().replace(/\s+/g, "");
@@ -41,14 +47,26 @@ function getList() {
         var next = $('.pagination.pagination-sm').find('li:last').find('a');
         console.log(next.text() === '»');
 
-        if (Number(getQuery('page')) < 10) {
+        if (next.text() === '»') {
             console.log('发送数据给主进程');
             console.log(courseArr);
-            ipRender.send('getListItem', courseArr);
+            /*
+                        ipRender.send('getListItem', courseArr);
+            */
+            let page = getQuery('page') || 1;
+            ipRender.sendToHost('getListItem', courseArr, page);
             var nextUrl = location.origin + location.pathname + next.attr('href');
-            currentWindow.loadURL(nextUrl);
+            window.location = nextUrl;
         } else {
-            ipRender.send('getListComplete', courseArr);
+            ipRender.sendToHost('getListComplete', courseArr);
+
+            /*
+                        ipRender.send('getListComplete', courseArr);
+            */
+            //所有课程获取完成后询问用户是否需要进行下一步操作
+            /* if (window.confirm('已获取所有课程,是否进行下一步添加分销渠道?')) {
+                 ipRender.send('nextStepAddLink', true);
+             }*/
         }
     }
 }
@@ -60,8 +78,22 @@ if (location.pathname === '/cps/objlist') {
 //添加分销
 function addChannel() {
     var pid = getQuery('pid');
+    remarks = store.remarks;
+    var trs = $('.table-bordered.table-striped tbody tr');
+    var remarksArr = [];
+    for (var index = 0; index < trs.length; index++) {
+        var tds = trs.eq(index).find('td');
+        remarksArr.push(tds.eq(2).text().replace(/\s+/g, ""));
+    }
+
+    if (remarksArr.indexOf(remarks) > -1) {
+        ipRender.send('addLinkDone', pid);
+        ipRender.sendToHost('addLinkDone', '链接渠道已有此条');
+        return;
+    }
+
     var _xsrf = $('.page-content input[name="csrfmiddlewaretoken"]').val();
-    var data = JSON.stringify({act: "addsid", desc: "分销", pid: pid});
+    var data = JSON.stringify({act: "addsid", desc: remarks, pid: pid});
     $.ajax({
         type: 'POST',
         url: "https://m.weike.fm/cps/cobjsid?pid=" + pid,
@@ -71,13 +103,22 @@ function addChannel() {
             "_xsrf": _xsrf
         },
         success: function (res) {
-            ipRender.send('addLinkDone', pid)
+            // ipRender.send('addLinkDone', pid)
+            ipRender.sendToHost('addLinkDone');
         },
         error: function (err) {
             throw err;
         }
     });
 }
+
+
+ipRender.on('liZhiListAddLinkSuccess', (event, args) => {
+    if (window.confirm('渠道添加完成是否进行下一步获取我的渠道列表?')) {
+        event.sender.send('nextStepGetMyDistribution', true)
+    }
+});
+
 
 if (location.pathname === '/cps/cobjsid') {
     addChannel();
@@ -112,14 +153,22 @@ if (location.pathname === '/cps/sourcelist') {
         console.log(next.text().replace(/\s+/g, "") === '»');
         if (next.text().replace(/\s+/g, "") === '»') {
             console.log('发送数据给主进程：', arr);
-            ipRender.send('getMyDistributionItem', arr);
+            // ipRender.send('getMyDistributionItem', arr);
+            ipRender.sendToHost('getMyDistributionItem', arr, getQuery('page') || 1);
             var nextUrl = location.origin + location.pathname + next.attr('href');
-            currentWindow.loadURL(nextUrl);
+            /*
+                        currentWindow.loadURL(nextUrl);
+            */
+            window.location = nextUrl
         } else {
-            ipRender.send('getMyDistributionComplete', arr);
+            ipRender.on('myDistriButionarrWrited', (event, args) => {
+                if (window.confirm('获取我的分销渠道列表完成是否进行下一步获取课程详细信息?')) {
+                    event.sender.send('nextStepGetTeacherInfo', true);
+                }
+            });
+            ipRender.sendToHost('getMyDistributionComplete', arr);
         }
     }
-
 }
 
 
@@ -148,12 +197,13 @@ function getTeachersInfo() {
             teacherid = res.data.liveroom.id;
             subtitle = channel.subtitle;
 
-            ipRender.send('getTeacherInfo', {
+            ipRender.sendToHost('getTeacherInfo', {
                 teacherName: teacherName,
                 subtitle: subtitle,
                 virtual_buynum: virtual_buynum,
                 lesson_chapter_num: lesson_chapter_num,
-                teacherid: teacherid
+                teacherid: teacherid,
+                lectures: res.data.lectures || []
             });
         },
         error: function (err) {

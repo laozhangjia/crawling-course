@@ -1,52 +1,70 @@
-const {ipcMain} = require('electron');
-const fs = require('fs');
-var currentWindow;
-let lizhiList = [];
-var myDistriButionarr = [];
+function listener(win) {
+    const {ipcMain, ipcRenderer} = require('electron');
+    const fs = require('fs');
+    const path = require('path');
+    var currentWindow = win;
+    let lizhiList = [];
+    var myDistriButionarr = [];
+    var newArr = [];
+    console.log('step:', global.store.step);
+    if (global.store.step) {
+        lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data;
+        newArr = JSON.parse(fs.readFileSync('./assets/lizhi/results/concat.json', {encoding: 'utf-8'})).data;
+    }
 
-function liszhiListener(win) {
-    currentWindow = win;
-    ipcMain.on('getListItem', function (event, args) {
-        lizhiList = lizhiList.concat(args);
-    });
+    liszhiListener();
+
+    function liszhiListener(win) {
+        ipcRenderer.on('getListItem', function (event, args) {
+            lizhiList = lizhiList.concat(args);
+        });
+
 
 //荔枝课程列表获取完成写入json文件
-    ipcMain.on('getListComplete', function (event, args) {
-        lizhiList = lizhiList.concat(args);
-        fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: lizhiList}), (err) => {
-            if (err) throw err;
-            console.log('lizhi list get complete and write complete');
-            distribution();
-        })
+        ipcRenderer.on('getListComplete', function (event, args) {
+            debugger;
+            alert('数据获取完成');
+            lizhiList = lizhiList.concat(args);
+            fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: lizhiList}), (err) => {
+                if (err) throw err;
+                console.log('lizhi list get complete and write complete');
+            })
+        });
+    }
+
+//监听添加渠道链接下一步操作
+    ipcMain.on('nextStepAddLink', (event, args) => {
+        args && distribution();
     });
-}
+
 
 //添加分销
-function distribution() {
+    function distribution() {
+        currentWindow.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[0]['promoteId']);
+    }
+
     var i = 0;
-    currentWindow.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[i]['promoteId']);
     ipcMain.on('addLinkDone', (event, args) => {
         i++;
         if (i < lizhiList.length) {
             currentWindow.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[i]['promoteId']);
         } else {
             console.log('add channel link complete');
-
-            //分销渠道添加完成开始获取我的分销
-            getMyDistribution();
+            event.sender.send('liZhiListAddLinkSuccess', 'success');
         }
     });
-}
 
-//获取我的分销
-function getMyDistribution(win) {
 
-    var newArr = [];
+//获取我的分销渠道列表
+    ipcMain.on('nextStepGetMyDistribution', (event, args) => {
+        args && getMyDistribution();
+    });
 
-    currentWindow = win || null;
-    //  var lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data;
-    console.log('lizhilist length', lizhiList.length);
-    currentWindow.loadURL('https://m.weike.fm/cps/sourcelist');
+    function getMyDistribution() {
+        currentWindow.loadURL('https://m.weike.fm/cps/sourcelist');
+    }
+
+
     ipcMain.on('getMyDistributionItem', (event, args) => {
         myDistriButionarr = myDistriButionarr.concat(args);
     });
@@ -87,35 +105,43 @@ function getMyDistribution(win) {
                 }
             })
         });
-        //获取我的分销完成开始获取教师详细信息
-        getTeachersInfo(newArr);
-    })
-}
+        fs.writeFileSync('./assets/lizhi/results/concat.json', JSON.stringify({data: newArr}));
+        event.sender.send('myDistriButionarrWrited', true);
+    });
+
+
+    ipcMain.on('nextStepGetTeacherInfo', (event, args) => {
+        if (args) {
+            getTeachersInfo();
+        }
+    });
 
 //获取教师信息
-function getTeachersInfo(newArr) {
-    var i = 0;
-    currentWindow.loadURL(newArr[i].lesson_url);
+    function getTeachersInfo() {
+        currentWindow.loadURL(newArr[0].lesson_url);
+    }
 
+    var teacherIndex = 0;
     ipcMain.on('getTeacherInfo', (event, args) => {
         console.log('id:', args, 'index:', i);
-        newArr[i]['lesson_subtitle'] = args['subtitle'];
-        newArr[i]['teacher'] = args['teacherName'];
-        newArr[i]['virtual_buynum'] = args['virtual_buynum'];
-        newArr[i]['lesson_chapter_num'] = args['lesson_chapter_num'];
-        var bili = newArr[i]['teacher_income'];
-        newArr[i]['teacher_income'] = bili.substring(0, bili.length - 1);
-        newArr[i]['teacherid'] = args['teacherid'];
-        i++;
-        if (i < newArr.length) {
-            currentWindow.loadURL(newArr[i].lesson_url);
+        newArr[teacherIndex]['lesson_subtitle'] = args['subtitle'];
+        newArr[teacherIndex]['teacher'] = args['teacherName'];
+        newArr[teacherIndex]['virtual_buynum'] = args['virtual_buynum'];
+        newArr[teacherIndex]['lesson_chapter_num'] = args['lesson_chapter_num'];
+        var bili = newArr[teacherIndex]['teacher_income'];
+        newArr[teacherIndex]['teacher_income'] = bili.substring(0, bili.length - 1);
+        newArr[teacherIndex]['teacherid'] = args['teacherid'];
+        teacherIndex++;
+        if (teacherIndex < newArr.length) {
+            currentWindow.loadURL(newArr[teacherIndex].lesson_url);
         } else {
             fs.writeFile('./assets/lizhi/results/Final.json', JSON.stringify({data: newArr}), (err) => {
                 if (err) throw err;
                 console.log('final data get complete. length:', newArr.length);
-            })
+            });
+            event.sender.send('getTeacherInfoSuccess', true);
         }
     })
 }
 
-module.exports = liszhiListener;
+module.exports = listener;

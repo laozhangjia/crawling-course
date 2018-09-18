@@ -1,8 +1,13 @@
 // window.location = "https://m.qlchat.com/wechat/page/recommend?tagId=2000001836208679#subItem";
-var fs = require("fs");
+const fs = nodeRequire("fs");
+const path = nodeRequire('path');
+const Excel = nodeRequire('exceljs');
+const ipRender = nodeRequire('electron').ipcRenderer;
 var fenxiaoArr = [];
 var myPreintArr = [];
 var newArr = [];
+var workbook;
+var worksheet;
 var categoryList = [
     {
         name: '个人提升',
@@ -72,6 +77,7 @@ function startPostData() {
         pageNum = 1;
         tagId = childrenItem.tagId;
         postPath = './assets/qianliao/results/' + childrenItem.name + '.json';
+        ipRender.sendToHost('getQianliaoLsit', '正在获取' + childrenItem.name + '分类');
         postData();
     });
 
@@ -83,7 +89,7 @@ function startPostData() {
     });
 
 
-    console.log('可分销数据arr:', fenxiaoArr.length);
+    ipRender.sendToHost('getQianliaoLsit', '所有分类已获取完成共' + fenxiaoArr.length + '条');
 
     fenxiaoArr.map(function (item) {
         Reprint(item);
@@ -126,7 +132,7 @@ function startPostData() {
                         if (err) {
                             console.error(err)
                         }
-                        console.log('文件已保存:', path);
+                        console.log('文件已保存:', postPath);
                     });
                 }
             }
@@ -151,7 +157,8 @@ function Reprint(item) {
         },
         success: function (res) {
             count++;
-            console.log('正在转载第:', count, '条')
+            console.log('正在转载第:', count, '条');
+            ipRender.sendToHost('getQianliaoLsit', item.businessName + '转载成功');
         }
     })
 }
@@ -161,6 +168,8 @@ function Reprint(item) {
 
 
 function getMyReprint() {
+    ipRender.sendToHost('getQianliaoLsit', '正在获取我的转载课程');
+
     $.ajax({
         url: 'https://m.qlchat.com/api/wechat/transfer/h5/selfmedia/relayChannels',
         type: 'POST',
@@ -174,6 +183,25 @@ function getMyReprint() {
         success: function (res) {
             var results = JSON.parse(res).data.liveChannels;
             myPreintArr = myPreintArr.concat(results);
+            workbook = new Excel.stream.xlsx.WorkbookWriter({
+                filename: './assets/qianliao/results/qianliao.xlsx'
+            });
+            worksheet = workbook.addWorksheet('Sheet');
+
+            worksheet.columns = [
+                {header: '课程名', key: 'bookname'},
+                {header: '分类', key: 'category_name'},
+                {header: '封面图', key: 'images'},
+                {header: '价格', key: 'price'},
+                {header: '分成比例', key: 'teacher_income'},
+                {header: '推广标题', key: 'lesson_subtitle'},
+                {header: '课程数', key: 'lesson_chapter_num'},
+                {header: '购买人数', key: 'virtual_buynum'},
+                {header: '教师', key: 'teacher'},
+                {header: '课程链接', key: 'lesson_url'},
+            ];
+
+
             fenxiaoArr.forEach((item) => {
                 myPreintArr.forEach((item1) => {
                     if (item.businessName === item1.name) {
@@ -205,18 +233,23 @@ function getMyReprint() {
                         newObj.lesson_url = 'https://m.qlchat.com/wechat/page/channel-intro?channelId=' + item1.id;
                         newObj.lesson_source = '千聊';
                         newArr.push(newObj);
+                        worksheet.addRow(newObj).commit();
                     }
                 })
             });
-
+            workbook.commit();
             fs.writeFile('assets/qianliao/results/我的转载.json', JSON.stringify({data: newArr}), function (err) {
                 if (err) {
                     console.error(err);
                 }
+                var excelPath = path.join(process.cwd(), 'assets/qianliao/results/qianliao.xlsx');
+                ipRender.sendToHost('getQianliaoLsit', '我的转载获取完成共' + newArr.length + '条;生成excel路径为:' + excelPath);
                 console.log('保存我的转载成功');
             });
         }
     })
 }
+
+
 
 

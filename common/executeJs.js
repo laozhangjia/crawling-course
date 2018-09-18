@@ -1,7 +1,5 @@
 function executeJs(content, js) {
-    content.on('did-finish-load', function () {
-        content.executeJavaScript(js, (results) => {
-        })
+    content.executeJavaScript(js, (results) => {
     })
 }
 
