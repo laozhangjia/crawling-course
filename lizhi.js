@@ -8,11 +8,12 @@ var fs = require('fs');
 // be closed automatically when the JavaScript object is garbage collected.
 
 //监听荔枝微课数据写入
-// acceptLizhilist();
-acceptLizhiDetail();
+acceptLizhilist();
+//acceptLizhiDetail();
 
 let win;
 
+/*
 var lizhiList = JSON.parse(fs.readFileSync('./lizhidetail.json', {encoding: 'utf-8'})).data;
 
 //跳转下一页
@@ -43,6 +44,7 @@ ipcMain.on('addLinkDone', (event, args) => {
     lizhiList[i]['teacherid'] = args['teacherid'];
     jumpToNext();
 });
+*/
 
 function createWindow() {
 
@@ -51,7 +53,7 @@ function createWindow() {
     win = new BrowserWindow({
         width: 800, height: 600,
     });
-    win.loadURL(lizhiList[0]['lesson_url']);
+    win.loadURL('https://m.weike.fm/cps/objlist');
     win.maximize();
     win.webContents.openDevTools();
 
@@ -66,7 +68,7 @@ function createWindow() {
         count++;
         fs.readFile('./assets/jquery-1.8.1.min.js', {encoding: 'utf-8'}, function (err, jquery) {
             content.executeJavaScript(jquery, (results) => {
-                fs.readFile('./assets/lizhi/getLizhiTeacher.js', {encoding: 'utf-8'}, function (err, detailjs) {
+                fs.readFile('./assets/lizhi/addChannelLink.js', {encoding: 'utf-8'}, function (err, detailjs) {
                     if (err) throw err;
                     content.executeJavaScript(detailjs, function (result) {
                     })
