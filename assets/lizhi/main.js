@@ -54,9 +54,9 @@ function getList() {
                         ipRender.send('getListItem', courseArr);
             */
             let page = getQuery('page') || 1;
-            ipRender.sendToHost('getListItem', courseArr, page);
             var nextUrl = location.origin + location.pathname + next.attr('href');
-            window.location = nextUrl;
+            ipRender.sendToHost('getListItem', courseArr, page, nextUrl);
+            // window.location = nextUrl;
         } else {
             ipRender.sendToHost('getListComplete', courseArr);
 

@@ -8,6 +8,7 @@ var myPreintArr = [];
 var newArr = [];
 var workbook;
 var worksheet;
+let myReprintPage = 1;
 var categoryList = [
     {
         name: '个人提升',
@@ -78,7 +79,7 @@ function startPostData() {
         tagId = childrenItem.tagId;
         postPath = './assets/qianliao/results/' + childrenItem.name + '.json';
         ipRender.sendToHost('getQianliaoLsit', '正在获取' + childrenItem.name + '分类');
-        postData();
+        postData(childrenItem);
     });
 
     fs.writeFile('./assets/qianliao/results/all.json', JSON.stringify({data: fenxiaoArr}), (err) => {
@@ -98,7 +99,7 @@ function startPostData() {
     getMyReprint();
 
 
-    function postData() {
+    function postData(childrenItem) {
         $.ajax({
             type: "POST",
             url: postUrl,
@@ -128,6 +129,8 @@ function startPostData() {
                     postData();
                 } else {
                     //  写入json文件
+                    console.log(postResults);
+                    ipRender.sendToHost('getQianliaoLsit', childrenItem.name + '分类获取完成共:' + postResults.length, childrenItem.name, postResults);
                     fs.writeFile(postPath, JSON.stringify({data: postResults}), (err) => {
                         if (err) {
                             console.error(err)
@@ -166,7 +169,6 @@ function Reprint(item) {
 
 //获取我已分销
 
-
 function getMyReprint() {
     ipRender.sendToHost('getQianliaoLsit', '正在获取我的转载课程');
 
@@ -177,12 +179,17 @@ function getMyReprint() {
         data: {
             isRelay: "Y",
             liveId: "2000002028384735",
-            page: {page: 1, size: 50000},
+            page: {page: myReprintPage, size: 500},
             tagId: 0
         },
         success: function (res) {
             var results = JSON.parse(res).data.liveChannels;
             myPreintArr = myPreintArr.concat(results);
+            console.log('mypreintarr:', myPreintArr.length);
+            if (results.length > 499) {
+                myReprintPage += 1;
+                return getMyReprint();
+            }
             workbook = new Excel.stream.xlsx.WorkbookWriter({
                 filename: './assets/qianliao/results/qianliao.xlsx'
             });
@@ -199,43 +206,44 @@ function getMyReprint() {
                 {header: '购买人数', key: 'virtual_buynum'},
                 {header: '教师', key: 'teacher'},
                 {header: '课程链接', key: 'lesson_url'},
+                {header: '推广链接', key: 'tweetLink'},
             ];
 
 
-            fenxiaoArr.forEach((item) => {
-                myPreintArr.forEach((item1) => {
-                    if (item.businessName === item1.name) {
-                        var newObj = {};
+            myPreintArr.forEach((item1) => {
+                var newObj = {};
+                fenxiaoArr.forEach((item) => {
+                    if (item.businessName.replace(/\s*/g, "") == item1.name.replace(/\s*/g, "")) {
                         item1.tagName = item.tagName;
                         item1.isRecommend = item.isRecommend;
                         item1.lesson_source = '千聊';
                         item1.sourceLiveId = item.liveId;
                         item1.sourceLiveName = item.liveName;
                         item1.tagId = item.tagId;
-
-                        newObj.bookname = item1.name;
-                        newObj.lesson_id = item1.id;
-                        newObj.images = item1.headImage;
-                        newObj.origin_price = item1.amount;
-                        newObj.price = item1.price;
-                        newObj.lesson_subtitle = item1.tweetTitle;
-                        newObj.lesson_chapter_num = item1.topicCount;
-                        newObj.virtual_buynum = item1.learningNum;
-                        newObj.teacher_income = item1.selfMediaPercent;
-                        newObj.teacherid = item1.liveId;
-                        newObj.teacher = item1.liveName;
-                        newObj.isdiscount = item1.discountStatus === 'Y' ? 1 : 0;
-                        newObj.status = item1.displayStatus === 'Y' ? 1 : 0;
-                        newObj.support_coupon = item1.isCouponOpen === 'Y' ? 1 : 0;
-                        newObj.is_open_recommend = item1.isRecommend === 'Y' ? 1 : 0;
-                        newObj.tagId = item1.tagId;
-                        newObj.category_name = item1.tagName;
-                        newObj.lesson_url = 'https://m.qlchat.com/wechat/page/channel-intro?channelId=' + item1.id;
-                        newObj.lesson_source = '千聊';
-                        newArr.push(newObj);
-                        worksheet.addRow(newObj).commit();
                     }
-                })
+                });
+                newObj.bookname = item1.name;
+                newObj.lesson_id = item1.id;
+                newObj.images = item1.headImage;
+                newObj.origin_price = item1.amount;
+                newObj.price = item1.price;
+                newObj.lesson_subtitle = item1.tweetTitle;
+                newObj.lesson_chapter_num = item1.topicCount;
+                newObj.virtual_buynum = item1.learningNum;
+                newObj.teacher_income = item1.selfMediaPercent;
+                newObj.teacherid = item1.liveId;
+                newObj.teacher = item1.liveName;
+                newObj.isdiscount = item1.discountStatus === 'Y' ? 1 : 0;
+                newObj.status = item1.displayStatus === 'Y' ? 1 : 0;
+                newObj.support_coupon = item1.isCouponOpen === 'Y' ? 1 : 0;
+                newObj.is_open_recommend = item1.isRecommend === 'Y' ? 1 : 0;
+                newObj.tagId = item1.tagId;
+                newObj.category_name = item1.tagName;
+                newObj.lesson_url = 'https://m.qlchat.com/wechat/page/channel-intro?channelId=' + item1.id;
+                newObj.tweetLink = item1.tweetUrl;
+                newObj.lesson_source = '千聊';
+                newArr.push(newObj);
+                worksheet.addRow(newObj).commit();
             });
             workbook.commit();
             fs.writeFile('assets/qianliao/results/我的转载.json', JSON.stringify({data: newArr}), function (err) {
