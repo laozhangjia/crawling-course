@@ -1,10 +1,11 @@
 {
-  "name": "electron-quick-start",
+  "name": "crawlin",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "lizhi.js",
+  "main": "app.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "packager": "electron-packager . crawling --win --out crawling -arch=×64 --asar --electronVersion=2.0.9 --overwrite --ignore=node_modules --icon="
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,11 +18,10 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^2.0.0"
+    "electron-packager": "^12.1.2"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "fs": "0.0.1-security",
-    "nightmare": "^3.0.1"
+    "exceljs": "^1.6.2",
+    "fs": "0.0.1-security"
   }
 }
