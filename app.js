@@ -2,7 +2,6 @@ global.store = {remarks: ''};
 const {app, BrowserWindow, ipcMain} = require('electron');
 const clearCookies = require('./clearCookies');
 const path = require('path');
-const lizhiListener = require('./assets/lizhi/listener');
 let win;
 let win2;
 var content;
@@ -18,15 +17,16 @@ app.on('ready', function () {
             preload: path.join(__dirname, 'renderer.js')
         }
     });
-     win2 = new BrowserWindow({
-         show: false,
-         webPreferences: {
-             preload: path.join(__dirname, 'renderer.js')
-         }
-     });
-     global.sharedObject.win2 = win2.id;
+    win2 = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'renderer.js')
+        }
+    });
+    global.sharedObject.win2 = win2.id;
     global.sharedObject.win = win.id;
     win.loadFile('index.html');
+    win.openDevTools();
     content = win.webContents;
 
     content.on('did-finish-load', function () {

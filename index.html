@@ -72,16 +72,13 @@
 <div id="close-browser" style="text-align: center;line-height:60px;">
     <button class="layui-btn">关闭浏览器</button>
 </div>
-<div id="upload" style="text-align: center;line-height:60px;">
-    <button class="layui-btn">上传</button>
-</div>
 
 <div id="webview">
     <webview src="https://m.weike.fm/cps/hotlist" nodeintegration plugins
              preload="renderer.js"></webview>
 </div>
 
-<div id="tips" style="color: green">
+<div id="tips" style="color: green;text-align: center;line-height: 40px;">
 </div>
 
 <div>
@@ -96,229 +93,157 @@
         <tr>
             <td>千聊</td>
             <td id="qianliao-step">
+                <button class="layui-btn layui-btn-normal" step="init">初始化环境</button>
+                <button class="layui-btn layui-btn-normal" step="1">1.获取课程列表</button>
+                <button class="layui-btn layui-btn-normal" step="2">2.转载所有课程</button>
+                <button class="layui-btn layui-btn-normal" step="3">3.获取我已转载得课程</button>
+                <button class="layui-btn layui-btn-normal" step="4">4.上传到服务器</button>
                 <!--
-                                <button class="layui-btn layui-btn-normal">1.获取课程列表</button>
+                                <button class="layui-btn layui-btn-normal">获取千聊数据</button>
                 -->
-                <!--  <button class="layui-btn layui-btn-normal">2.获取课程列表</button>
-                  <button class="layui-btn layui-btn-normal">3.分销课程列表</button>
-                  <button class="layui-btn layui-btn-normal">4.获取我的分销</button>-->
-                <button class="layui-btn layui-btn-normal">获取千聊数据</button>
             </td>
         </tr>
         <tr>
             <td>荔枝微课</td>
             <td id="lizhi-step">
-                <!--
-                                <button class="layui-btn layui-btn-normal" data-step="load-lizhi">1.加载千聊</button>
-                -->
-                <button class="layui-btn layui-btn-normal" data-step="1" ispause="0">2.获取课程列表</button>
-                <button class="layui-btn layui-btn-normal" data-step="2">3.检查/添加分销渠道</button>
-                <button class="layui-btn layui-btn-normal" data-step="3">4.获取我的渠道列表</button>
-                <button class="layui-btn layui-btn-normal" data-step="4">5.获取教师信息</button>
+                <button class="layui-btn layui-btn-normal" data-step="init">初始化环境</button>
+                <button class="layui-btn layui-btn-normal" data-step="1">1.获取课程列表</button>
+                <button class="layui-btn layui-btn-normal" data-step="2">2.检查/添加分销渠道</button>
+                <button class="layui-btn layui-btn-normal" data-step="3">3.获取我的渠道列表</button>
+                <button class="layui-btn layui-btn-normal" data-step="4">4.获取教师信息</button>
+                <button class="layui-btn layui-btn-normal" data-step="5">5.上传到服务器</button>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
-<!--
-<div class="seamless-data">
-    <span>抓取数据展示</span>
-    <table class="layui-table">
-        <colgroup>
-            <col width="150">
-            <col width="200">
-            <col>
-        </colgroup>
-        <thead>
-        <tr>
-            <th>课程名</th>
-            <th>课程分类</th>
-            <th>课程标题</th>
-            <th>课程链接</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>贤心</td>
-            <td>2016-11-29</td>
-            <td>人生就像是一场修行</td>
-        </tr>
-        <tr>
-            <td>许闲心</td>
-            <td>2016-11-28</td>
-            <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-        </tr>
-        </tbody>
-    </table>
-
-</div>
--->
-
-
-<!--
-<div id="category">
-    <div class="fl">
-        <div class="" data-category="qianliao">千聊</div>
-        <p id="qianliao-tip" style="color: red"></p>
-        <button style="cursor: pointer" id="get-qianliao">获取千聊数据</button>
-    </div>
-    <div class="fl">
-        <div class="" style="margin-top: 10px" data-category="lizhi">荔枝</div>
-        <p id="lizhi-tip" style="color: red"></p>
-        <input type="text" placeholder="输入渠道备注" style="margin: 0 auto;margin-bottom: 10px;" id="remarks">
-        <div class="step">
-            <button class="step-item" data-step="1">获取课程列表</button>
-            <button class="step-item" data-step="2">检查/添加渠道</button>
-            <button class="step-item" data-step="3">获取渠道列表</button>
-            <button class="step-item" data-step="4">获取教师信息</button>
-        </div>
-    </div>
-    <div style="margin-top: 50px;">
-        <button onclick="reload()" style="cursor: pointer">重置</button>
-    </div>
-
-</div>-->
 <script>
-
-
+    let tips;
     const Excel = nodeRequire('exceljs');
+    const {shell, dialog, app, ipRender, session} = nodeRequire('electron').remote;
+    const clearCookies = nodeRequire('./clearCookies');
     const path = nodeRequire('path');
-    var ipcRender = nodeRequire('electron').ipcRenderer;
-    var remote = nodeRequire('electron').remote;
-    var store = remote.getGlobal('store');
-    let sharedObject = remote.getGlobal('sharedObject');
-    var currentWindow = remote.getCurrentWindow();
+    let remote = nodeRequire('electron').remote;
+    let store = remote.getGlobal('store');
     const fs = nodeRequire('fs');
-    var category = '';
-    var webview;
-    var lizhiList = [];
-    var myChannel = [];
-    var newArr = [];
-    var remarks = '';
-    var workbook;
-    var worksheet;
-    var getLizhiListInstance;
-
-    class getLizhiList {
-        constructor(webview) {
-            this.page = 1;
-            this.isPause = false;
-            this.webview = webview;
-            this.arr = [];
-        }
-
-        start(url) {
-            if (!this.isPause) {
-                this.webview.loadURL(`https://m.weike.fm/cps/objlist?ot=r&order_by=ut&keyword=&st=&page=${this.page}`);
-            }
-        }
-
-        saveItem(arr, callback) {
-            this.arr = this.arr.concat(arr);
-            this.page += 1;
-        }
-
-        saveALl(arr, callback) {
-            const _this = this;
-            this.arr = this.arr.concat(arr);
-            this.page = 1;
-            fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: lizhiList}), (err) => {
-                if (err) throw err;
-                callback(_this.arr);
-            })
-        }
-
-        pause() {
-            this.isPause = !this.isPause;
-        }
-    }
-
-
-    /*let win2 = remote.BrowserWindow.fromId(sharedObject.win2);
-    win2.loadURL('https://m.weike.fm/cps/sourcelist');
-    win2.show();*/
-    // const {BrowserWindow} = nodeRequire('electron').remote;
-    // let win = new BrowserWindow({width: 800, height: 600});
-    // win.loadURL('http://www.mpweixin.com/web/index.php?c=user&a=login&');
+    const {uploadJson} = nodeRequire('./assets/uploadJson');
+    let {qianliaoHandle} = nodeRequire('./assets/qianliao/main');
+    let qianliaoInstance;
+    let webview;
+    let remarks = '';
+    let lizhiHandelInstance;
 
     window.onload = function () {
         webview = document.querySelector('webview');
-        let tips = document.getElementById('tips');
+        tips = document.getElementById('tips');
 
-        $('#close-browser').on('click', '.layui-btn', function () {
-            if ($("#webview").is(':hidden')) {
-                $("#webview").show();
-            } else {
-                $("#webview").hide();
+        //荔枝微课
+        class LizhiHandle {
+            constructor(webview) {
+                this.createTransportIndex = 0;
+                this.teacherIndex = 0;
+                this.transportCount = 0;
+                this.workbook = null;
+                this.worksheet = null;
+                this.webview = webview;
+                this.courseList = [];
+                this.myTransport = [];
+                this.mergetmyTransportAndCourseList = [];
+                this.finalData = [];
             }
-        });
 
-        function importjson() {
-            const uploadArr = JSON.parse(fs.readFileSync('./assets/qianliao/results/我的转载.json'), {encoding: 'utf-8'}).data;
-            $.ajax({
-                type: 'POST',
-                url: 'http://www.mpweixin.com/web/index.php?c=site&a=entry&do=batchupload&m=fy_lessonv2',
-                data: {
-                    lesson_info: uploadArr
-                },
-                success: function (res) {
-                    debugger;
-                }
-            });
-        }
+            //单页课程获取完成
+            getLizhiItem(arr, page) {
+                this.courseList = this.courseList.concat(arr);
+                tips.innerText = `第${page}页获取完成`;
+                this.webview.loadURL(`https://m.weike.fm/cps/objlist?ot=r&order_by=ut&keyword=&st=&page=${page}`);
+            }
 
-        $('#upload').on('click', 'button', function () {
-            importjson();
-        });
-
-        //获取列表
-        var getList = {
-            getListItem: function (arr, page) {
-                tips.innerText = '第' + page + '页获取完成';
-                lizhiList = lizhiList.concat(arr);
-            },
-            getListComplete: function (arr) {
-                lizhiList = lizhiList.concat(arr);
-                fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: lizhiList}), (err) => {
+            //所有课程获取完成
+            getLizhiComplete(arr, callback) {
+                const _this = this;
+                this.courseList = this.courseList.concat(arr);
+                this.page = 1;
+                tips.innerText = `课程列表已获取完成共:${_this.courseList.length}条`;
+                fs.writeFile('./assets/lizhi/results/list.json', JSON.stringify({data: _this.courseList}), (err) => {
                     if (err) throw err;
-                    tips.innerText = '课程列表已获取完成共' + lizhiList.length + '课';
+                    console.log(`荔枝课程获取完成共:${_this.courseList.length}`);
+                    callback && callback(_this.arr);
                 })
             }
-        };
 
-        //添加渠道链接
-        var addChannelLink = {
-            index: 0,
-            addChannelLink: function (args) {
-                console.log(args);
-                this.index++;
-                if (this.index < lizhiList.length) {
-                    webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[this.index]['promoteId']);
-                    tips.innerText = '正在添加' + lizhiList[this.index]['courseName'] + '渠道链接' + '(' + this.index + '/' + lizhiList.length + ')';
+            //检查是否是最终数据
+            checkFinalData() {
+                let filePath = path.join(process.cwd(), './assets/lizhi/results/Final.json');
+                let filePathIsExits = fs.existsSync(filePath);
+                let myTransport = filePathIsExits && JSON.parse(fs.readFileSync(filePath, {encoding: 'utf-8'})).data || [];
+                if (myTransport.length) {
+                    this.finalData = myTransport;
+                }
+                return myTransport.length;
+            }
+
+            //检查是否已经获取过课程
+            checkIsHasCourseList() {
+                let filePath = path.join(process.cwd(), 'assets/lizhi/results/list.json');
+                let filePathIsExits = fs.existsSync(filePath);
+                let courseList = filePathIsExits && JSON.parse(fs.readFileSync(filePath, {encoding: 'utf-8'})).data || [];
+                if (courseList.length) {
+                    this.courseList = courseList;
+                }
+                return courseList.length;
+            }
+
+            //检查是否获取过我的转载
+            checkIsHasMyTransport() {
+                let filePath = path.join(process.cwd(), './assets/lizhi/results/concat.json');
+                let filePathIsExits = fs.existsSync(filePath);
+                let concatList = filePathIsExits && JSON.parse(fs.readFileSync(filePath, {encoding: 'utf-8'})).data || [];
+                if (concatList.length) {
+                    this.mergetmyTransportAndCourseList = concatList;
+                }
+                return concatList.length;
+            }
+
+
+            //转载课程
+            createTransport() {
+                if (this.createTransportIndex == 0 && !this.courseList.length && !this.checkIsHasCourseList()) {
+                    alert('请先获取所有课程列表再进行此操作');
+                }
+                if (this.createTransportIndex > 0) {
+                    this.transportCount += 1;
+                }
+                if (this.createTransportIndex < this.courseList.length) {
+                    let current = this.courseList[this.createTransportIndex];
+                    this.webview.loadURL(`https://m.weike.fm/cps/cobjsid?pid=${current['promoteId']}&remarks=${remarks}`);
+                    this.createTransportIndex = this.createTransportIndex + 1;
+                    tips.innerText = `正在转载${current['courseName']}-(${this.createTransportIndex}/${this.courseList.length})`;
                 } else {
-                    tips.innerText = '渠道链接已添加完成';
-                    document.getElementById('remarks').value = '';
+                    tips.innerText = `课程已转载完成共转载${_this.transportCount}条`;
+                    // document.getElementById('remarks').value = '';
                 }
             }
-        };
 
-        //获取渠道列表
-        var getMyChannel = {
-            getChannelItem: function (arr, page) {
-                tips.innerText = '第' + page + '页已获取';
-                myChannel = myChannel.concat(arr);
-            },
-            getMyChannelComplete: function (arr) {
-                myChannel = myChannel.concat(arr);
-                console.log('myChannel length', myChannel.length);
-                fs.writeFileSync('./assets/lizhi/results/my-distribution.json', JSON.stringify({data: myChannel}));
-                var number = 1;
-                myChannel.forEach((item) => {
-                    lizhiList.forEach((item1) => {
+            //我的转载单页数据获取完成
+            getMyTransportItem(arr, page) {
+                this.myTransport = this.myTransport.concat(arr);
+                this.webview.loadURL(`https://m.weike.fm/cps/sourcelist?keyword=&end=2018-09-20&t=today&tab=all&beg=2018-09-20&page=${page}`)
+            }
+
+            //我的所有转载获取完成
+            getMyTransportComplete(arr) {
+                const _this = this;
+                this.mergetmyTransportAndCourseList = [];
+                this.myTransport = this.myTransport.concat(arr);
+                fs.writeFileSync('./assets/lizhi/results/my-distribution.json', JSON.stringify({data: _this.myTransport}));
+                let number = 1;
+                _this.myTransport.forEach((item) => {
+                    _this.courseList.forEach((item1) => {
                         if (item1.sameId == item.sameId) {
                             console.log('current index:', number);
                             number++;
-                            var newObj = {};
+                            let newObj = {};
                             newObj.channelNumber = item.channelNumbering;
                             newObj.bookname = item1.courseName; //课程名
                             newObj.lesson_id = item1.promoteId; //课程ID
@@ -340,94 +265,130 @@
                             newObj.lesson_url = item.lesson_url;      //课程链接
                             newObj.lesson_source = '微课';
                             newObj.tweetArticle = item1.tweetArticle;
-                            newArr.push(newObj);
+                            _this.mergetmyTransportAndCourseList.push(newObj);
                         }
                     })
                 });
-                tips.innerText = '我的渠道列表获取完成共' + newArr.length + '条';
-                fs.writeFileSync('./assets/lizhi/results/concat.json', JSON.stringify({data: newArr}));
+                tips.innerText = `我的转载列表获取完成共${_this.mergetmyTransportAndCourseList.length}条`;
+                fs.writeFileSync('./assets/lizhi/results/concat.json', JSON.stringify({data: _this.mergetmyTransportAndCourseList}));
             }
-        };
 
-        var getTeacherInfo = {
-            teacherIndex: 0,
-            getTeacherInfo: function (args) {
-                var teacherIndex = this.teacherIndex;
-                newArr[teacherIndex]['lesson_subtitle'] = args['subtitle'];
-                newArr[teacherIndex]['teacher'] = args['teacherName'];
-                newArr[teacherIndex]['virtual_buynum'] = args['virtual_buynum'];
-                newArr[teacherIndex]['lesson_chapter_num'] = args['lesson_chapter_num'];
-                var bili = newArr[teacherIndex]['teacher_income'];
-                newArr[teacherIndex]['teacher_income'] = bili.substring(0, bili.length - 1);
-                newArr[teacherIndex]['teacherid'] = args['teacherid'];
-                worksheet.addRow(newArr[teacherIndex]).commit();
-                this.teacherIndex++;
-                teacherIndex = this.teacherIndex;
-                if (teacherIndex < newArr.length) {
-                    webview.loadURL(newArr[teacherIndex].lesson_url);
-                    tips.innerText = newArr[teacherIndex]['bookname'] + '(' + teacherIndex + '/' + newArr.length + ')';
+            //获取教师详情
+            getTeacherInfo(args) {
+                const _this = this;
+                if (this.teacherIndex == 0 && !this.mergetmyTransportAndCourseList.length && !this.checkIsHasMyTransport()) {
+                    alert('请先获取我的转载课程再进行此操作');
+                    return;
+                }
+                let index = this.teacherIndex - 1;
+                let teacherIndex = this.teacherIndex;
+                if (teacherIndex > 0) {
+                    _this.mergetmyTransportAndCourseList[index]['lesson_subtitle'] = args['subtitle'];
+                    _this.mergetmyTransportAndCourseList[index]['teacher'] = args['teacherName'];
+                    _this.mergetmyTransportAndCourseList[index]['virtual_buynum'] = args['virtual_buynum'];
+                    _this.mergetmyTransportAndCourseList[index]['lesson_chapter_num'] = args['lesson_chapter_num'];
+                    var bili = _this.mergetmyTransportAndCourseList[index]['teacher_income'];
+                    _this.mergetmyTransportAndCourseList[index]['teacher_income'] = bili.substring(0, bili.length - 1);
+                    _this.mergetmyTransportAndCourseList[index]['teacherid'] = args['teacherid'];
+                    _this.mergetmyTransportAndCourseList[index]['lectures'] = args['lectures'];
+                    _this.worksheet.addRow(this.mergetmyTransportAndCourseList[index]);
+                }
+                if (teacherIndex < this.mergetmyTransportAndCourseList.length) {
+                    _this.webview.loadURL(_this.mergetmyTransportAndCourseList[teacherIndex]['lesson_url']);
+                    _this.teacherIndex = _this.teacherIndex + 1;
+
+                    tips.innerText = `${this.mergetmyTransportAndCourseList[teacherIndex]['bookname']}(${_this.teacherIndex} /${_this.mergetmyTransportAndCourseList.length} )`;
                 } else {
-                    workbook.commit();
-                    var excelPath = path.join(process.cwd(), 'assets/lizhi/results/lizhi.xlsx');
-                    fs.writeFile('./assets/lizhi/results/Final.json', JSON.stringify({data: newArr}), (err) => {
+                    _this.finalData = _this.mergetmyTransportAndCourseList;
+
+                    fs.writeFile('./assets/lizhi/results/Final.json', JSON.stringify({data: _this.mergetmyTransportAndCourseList}), (err) => {
                         if (err) throw err;
-                        tips.innerText = '教师信息获取完成,生成excel路径为:' + excelPath;
                     });
+                    let xlsxPath;
+                    dialog.showOpenDialog({title: '保存荔枝微课转载到', properties: ['openDirectory']},
+                        (filePath) => {
+                            if (filePath) {
+                                workbook.xlsx.writeFile(`${filePath}\\我的转载-荔枝微课.xlsx`).then(function () {
+                                    xlsxPath = `${filePath}\\我的转载-荔枝微课.xlsx`;
+                                    tips.innerText = `我的转载-荔枝微课生成excel路径为: ${xlsxPath}`;
+                                    shell.openItem(xlsxPath);
+                                });
+                            } else {
+                                workbook.xlsx.writeFile(`${app.getPath('downloads')}\\我的转载-荔枝微课.xlsx`).then(function () {
+                                    xlsxPath = `${app.getPath('downloads')}\\我的转载-荔枝微课.xlsx`;
+                                    tips.innerText = `我的转载-荔枝微课生成excel路径为: ${xlsxPath}`;
+                                    shell.openItem(xlsxPath);
+                                });
+                            }
+                        });
                 }
             }
-        };
+
+
+            //上传到服务器
+            uploadToserver() {
+                const _this = this;
+                if (!this.finalData.length && !this.checkFinalData()) {
+                    alert('请先执行第三、第四步再执行此操作');
+                    return;
+                }
+                new uploadJson(_this.finalData).upload();
+            }
+        }
+
+
+        $('#close-browser').on('click', '.layui-btn', function () {
+            if ($("#webview").is(':hidden')) {
+                $("#webview").show();
+            } else {
+                $("#webview").hide();
+            }
+        });
 
 
         webview.addEventListener('ipc-message', (event) => {
             var args = event.args;
+            if (!lizhiHandelInstance) {
+                lizhiHandelInstance = new LizhiHandle(webview);
+            }
             if (event.channel === "getListItem") {
-                //  getList.getListItem(event.args[0], event.args[1]);
-                getLizhiListInstance.saveItem(args[0]);
-                tips.innerText = `第${args[1]}页获取完成`;
-                getLizhiListInstance.start(args[2]);
+                lizhiHandelInstance.getLizhiItem(args[0], args[1]);
             }
             if (event.channel === 'getListComplete') {
-                // getList.getListComplete(event.args[0]);
-                getLizhiListInstance.saveALl(args[0], (arr) => {
-                    tips.innerText = `课程列表已获取完成共${arr.length}课`;
-                });
+                lizhiHandelInstance.getLizhiComplete(args[0]);
             }
 
             if (event.channel == 'addLinkDone') {
-                addChannelLink.addChannelLink(args[0]);
+                lizhiHandelInstance.createTransport();
             }
 
             if (event.channel == 'getMyDistributionItem') {
-                getMyChannel.getChannelItem(event.args[0], args[1]);
+                tips.innerText = `第${args[1]}页已获取`;
+                lizhiHandelInstance.getMyTransportItem(args[0], args[1]);
             }
 
             if (event.channel == 'getMyDistributionComplete') {
-                getMyChannel.getMyChannelComplete(event.args[0]);
+                lizhiHandelInstance.getMyTransportComplete(args[0]);
             }
 
             if (event.channel == 'getTeacherInfo') {
-                getTeacherInfo.getTeacherInfo(args[0]);
+                lizhiHandelInstance.getTeacherInfo(args[0]);
             }
             if (event.channel == 'getQianliaoLsit') {
                 tips.innerText = args[0];
-
-
+                var qianliaoUpload = new uploadJson(args[1]);
+                qianliaoUpload.upload();
             }
         });
 
         webview.addEventListener('did-finish-load', function () {
+            //    webview.openDevTools();
             var Jquery = fs.readFileSync('./assets/jquery-1.8.1.min.js', {encoding: 'utf-8'});
             webview.executeJavaScript(Jquery, (results) => {
-                if (category === 'lizhi') {
+                if (webview.getURL().indexOf('m.weike.fm') > -1) {
                     let mainJs = fs.readFileSync('./assets/lizhi/main.js', {encoding: 'utf-8'});
                     webview.executeJavaScript(mainJs, (results) => {
-                        webview.send('get-remarks', '123');
-                        console.log('执行荔枝main成功')
-                    })
-                } else if (category == 'qianliao') {
-                    let mainJs = fs.readFileSync('./assets/qianliao/main.js', {encoding: 'utf-8'});
-                    webview.executeJavaScript(mainJs, (results) => {
-                        console.log('执行千聊main成功')
+                        console.log('执行荔枝mainjs成功')
                     })
                 }
             })
@@ -435,120 +396,95 @@
 
 
         $('#qianliao-step').on('click', 'button', function () {
-            category = 'qianliao';
-            $('#webview').show();
-            webview.loadURL('https://m.qlchat.com/pc/knowledge-mall/index');
-        });
-
-        /*  document.getElementById('qianliao-step').addEventListener('click', function (event) {
-              category = 'qianliao';
-              $('#webview').show();
-              webview.loadURL('https://m.qlchat.com/pc/knowledge-mall/index');
-          });
-  */
-        $('#lizhi-step').on('click', 'button', function (event) {
-            let target = event.srcElement || event.target;
-            let step;
-            category = 'lizhi';
-            if (target.tagName == 'BUTTON' && target.hasAttribute('data-step')) {
-                step = target.getAttribute('data-step');
-
-                if (step == 1) {
-                    lizhiList = [];
-                    if (!getLizhiListInstance) {
-                        getLizhiListInstance = new getLizhiList(webview);
-                        getLizhiListInstance.arr = [];
-                        getLizhiListInstance.start('https://m.weike.fm/cps/objlist');
-                    } else {
-                        if ($(this.attr('ispause')) == 0) {
-                            getLizhiListInstance.pause();
-                            $(this.attr('ispause', 1));
-                            $(this).html('暂停');
-                        } else {
-
-                        }
-                    }
-                }
-                if (step == 2) {
-
-                    layui.use('layer', function () {
-                        layer.prompt('渠道备注', function (value, index, elem) {
-                            if (!value) {
-                                return alert('请输入渠道备注');
-                            }
-                            layer.close(index);
-                            remarks = value;
-                            if (lizhiList.length) {
-                                webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[0]['promoteId'])
-                            } else if (fs.existsSync('./assets/lizhi/results/list.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data.length) {
-                                lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json')).data;
-                                webview.loadURL('https://m.weike.fm/cps/cobjsid?pid=' + lizhiList[0]['promoteId'])
-                            } else {
-                                alert('未检测到有课程列表请先获取课程列表再执行此操作');
-                            }
-                        });
-                    });
-                    /*     if (!remarks) {
-                             alert('请输入渠道备注');
-                             return;
-                         } else {
-                             store.remarks = remarks;
-                         }*/
-                }
-
-
-                if (step == 3) {
-                    if (lizhiList.length) {
-                        myChannel = [];
-                        webview.loadURL('https://m.weike.fm/cps/sourcelist')
-                    } else if (fs.existsSync('./assets/lizhi/results/list.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json', {encoding: 'utf-8'})).data.length) {
-                        myChannel = [];
-                        lizhiList = JSON.parse(fs.readFileSync('./assets/lizhi/results/list.json')).data;
-                        webview.loadURL('https://m.weike.fm/cps/sourcelist')
-                    } else {
-                        alert('请先获取课程列表再获取执行此操作');
-                    }
-                }
-
-                if (step == 4) {
-                    if (newArr.length) {
-                        lizhiExcelInit();
-                        webview.loadURL(newArr[0].lesson_url);
-                    } else if (
-                        fs.existsSync('./assets/lizhi/results/concat.json') && JSON.parse(fs.readFileSync('./assets/lizhi/results/concat.json', {encoding: 'utf-8'})).data.length
-                    ) {
-                        lizhiExcelInit();
-                        newArr = JSON.parse(fs.readFileSync('./assets/lizhi/results/concat.json', {encoding: 'utf-8'})).data;
-                        webview.loadURL(newArr[0].lesson_url);
-                    } else {
-                        alert('请先获取我的渠道列表再执行此操作');
-                    }
-                }
-
+            let step = $(this).attr('step');
+            if (!qianliaoInstance) {
+                qianliaoInstance = new qianliaoHandle(tips);
+            }
+            if (step == 'init') {
+                webview.loadURL('https://m.qlchat.com/pc/knowledge-mall/index');
                 $('#webview').show();
+            }
+
+            if (step == 1) {
+                tips.innerText = `正在获取千聊分类课程列表`;
+                qianliaoInstance.getList();
+            }
+            if (step == 2) {
+                qianliaoInstance.createTransport();
+            }
+            if (step == 3) {
+                qianliaoInstance.getMyTransport();
+            }
+            if (step == 4) {
+                qianliaoInstance.uploadToServer();
             }
         });
 
-        function lizhiExcelInit() {
-            workbook = new Excel.stream.xlsx.WorkbookWriter({
-                filename: './assets/lizhi/results/lizhi.xlsx'
-            });
-            worksheet = workbook.addWorksheet('Sheet');
-            worksheet.columns = [
-                {header: '渠道编号', key: 'channelNumber'},
-                {header: '课程名', key: 'bookname'},
-                {header: '分类', key: 'category_name'},
-                {header: '封面图', key: 'images'},
-                {header: '价格', key: 'price'},
-                {header: '分成比例', key: 'teacher_income'},
-                {header: '推广标题', key: 'lesson_subtitle'},
-                {header: '课程数', key: 'lesson_chapter_num'},
-                {header: '购买人数', key: 'virtual_buynum'},
-                {header: '教师', key: 'teacher'},
-                {header: '文案链接', key: 'tweetArticle'},
-                {header: '课程链接', key: 'lesson_url'},
-            ];
-        }
+
+        $('#lizhi-step').on('click', 'button', function (event) {
+            let step = $(this).attr('data-step');
+            if (!lizhiHandelInstance) {
+                lizhiHandelInstance = new LizhiHandle(webview);
+            }
+
+            if (step == 'init') {
+                webview.loadURL('https://m.weike.fm/cps/hotlist');
+            }
+            if (step == 1) {
+                lizhiHandelInstance.courseList = [];
+                webview.loadURL('https://m.weike.fm/cps/objlist');
+            }
+            if (step == 2) {
+                lizhiHandelInstance.createTransportIndex = 0;
+                layui.use('layer', function () {
+                    layer.prompt({title: '请输入分销渠道备注'}, function (value, index, elem) {
+                        if (!value.replace(/\s+/g, "")) {
+                            return alert('请输入分销渠道备注');
+                        }
+                        layer.close(index);
+                        remarks = value;
+                        store.remarks = value;
+                        lizhiHandelInstance.createTransport();
+                    });
+                });
+            }
+
+            if (step == 3) {
+                if (!lizhiHandelInstance.courseList.length && !lizhiHandelInstance.checkIsHasCourseList()) {
+                    alert('请先获取课程列表再执行此操作');
+                    return;
+                }
+                lizhiHandelInstance.myTransport = [];
+                lizhiHandelInstance.mergetmyTransportAndCourseList = [];
+                lizhiHandelInstance.webview.loadURL('https://m.weike.fm/cps/sourcelist')
+            }
+
+            if (step == 4) {
+                lizhiHandelInstance.teacherIndex = 0;
+                lizhiHandelInstance.workbook = new Excel.Workbook();
+                lizhiHandelInstance.worksheet = lizhiHandelInstance.workbook.addWorksheet('Sheet');
+                lizhiHandelInstance.worksheet.columns = [
+                    {header: '渠道编号', key: 'channelNumber'},
+                    {header: '课程名', key: 'bookname'},
+                    {header: '分类', key: 'category_name'},
+                    {header: '封面图', key: 'images'},
+                    {header: '价格', key: 'price'},
+                    {header: '分成比例', key: 'teacher_income'},
+                    {header: '推广标题', key: 'lesson_subtitle'},
+                    {header: '课程数', key: 'lesson_chapter_num'},
+                    {header: '购买人数', key: 'virtual_buynum'},
+                    {header: '教师', key: 'teacher'},
+                    {header: '文案链接', key: 'tweetArticle'},
+                    {header: '课程链接', key: 'lesson_url'},
+                ];
+                lizhiHandelInstance.getTeacherInfo();
+            }
+
+            if (step == 5) {
+                lizhiHandelInstance.uploadToserver();
+            }
+            $('#webview').show();
+        });
     }
 </script>
 </body>
