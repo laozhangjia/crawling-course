@@ -8,3 +8,8 @@
 1.  npm install electron -g
 2.	npm isntall 
 3.	npm start or electron .
+# 文件说明
+1. app.js 项目入口文件即主进程
+2. index.html 主页面即渲染进程，采用webview的方式加载荔枝微课及千聊
+3. assets/lizhi/main.js 爬取荔枝微课，转载课程，获取转载后的课程核心代码
+4. assets/qianliao/main.js 爬取千聊课程，转载课程，获取转载后课程核心代码
