@@ -15,4 +15,4 @@
 4. assets/qianliao/main.js： 爬取千聊课程，转载课程，获取转载后课程核心代码
 5. assets/qianliao/results： 生成各个步骤获取千聊课程、转载后的千聊课程的json、excel文件
 6. assets/lizhi/results： 生成各个步骤获取荔枝微课课程、转载后的荔枝微课课程的json、excel文件
-7. renderer.js： 解决node内置require跟第三方包之间采用require方式加载冲突报错问题，须在渲染进程加载之前调用
+7. renderer.js： 解决node内置require跟第三方包之间采用require方式加载冲突报错问题（如jQuery），须在渲染进程加载之前调用
