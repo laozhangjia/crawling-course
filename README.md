@@ -5,7 +5,7 @@
 
 # Getting Started
 
-1.npm install electron -g (尽量使用3.x版本,最新版本重启应用后会有cookie丢失问题)
+1.npm install electron -g(尽量使用3.x版本,最新版本重启应用后会有cookie丢失问题)
 2.	npm isntall 
 3.	npm start or electron .
 # 文件说明
