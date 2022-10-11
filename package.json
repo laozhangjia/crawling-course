@@ -19,7 +19,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "2.0.9",
-    "electron-packager": "^12.1.2"
+    "electron-packager": "^16.0.0"
   },
   "dependencies": {
     "exceljs": "^1.6.2",
